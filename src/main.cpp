@@ -13,6 +13,7 @@
 #include <aligned_new>
 #include <mkl.h>
 #include <mkl_vsl.h>
+#include <mpi.h>
 
 #include <parallel/algorithm>
 #include <parallel/numeric>
