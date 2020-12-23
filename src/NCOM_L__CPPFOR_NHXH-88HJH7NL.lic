@@ -1,0 +1,12 @@
+PACKAGE IF83F2F10 INTEL 2021.0102 D1AD63313755 COMPONENTS="AdvXEl \
+	ArBBL CCompL Comp-CL Comp-FL Comp-OpenMP Comp-PointerChecker \
+	DAAL-L DbgL FCompL MKernL PerfAnl PerfPrimL StaticAnlL \
+	ThreadAnlGui ThreadBB" OPTIONS=SUITE ck=84 SIGN=FBC173C02F3E
+INCREMENT IF83F2F10 INTEL 2021.0102 2-jan-2021 uncounted 9AB151EB5B7C \
+	VENDOR_STRING="SUPPORT=NCOM \
+	https://registrationcenter.intel.com" HOSTID=ID=08326395 \
+	PLATFORMS="i86_r i86_re it64_lr it64_re amd64_re i86_mac \
+	x64_mac" ck=153 SN=SMSA88HJH7NL SIGN=C32BE20CFA6A
+#
+# SerialNumber=NHXH-88HJH7NL
+#
