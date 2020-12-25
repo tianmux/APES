@@ -1,0 +1,51 @@
+The caculation on time has more resolution issue. 
+1.I have to recorde the dt with respect to the center of each bucket at each turn, instead of against some number calculated before hand.
+2. I tried with the mixer that response to the i-1 -> i-i-nBins volrage data instead of to i->i-nBins, it does not work as well, changing it back.
+3. The correction factor for the dI and dQ, namely cos(omegarf*dt/2) and sin(omegarf*dt/2) might need some modification.  
+4. changing the correction factor didn't help by much.
+5. trying to change the data type to long double. Didn't do that.
+6. 20190816, adding the breaking point function so that I can run the code from previously saved bunch, voltage and current data. 
+7. Seems like the breaking point part works.
+8. Need to try the long double.
+2019-8-21
+1. Tried long double with some simplified synchrotron motion mapping, helped a little but far worse than the mapping with relative time. Going to try that. 
+2019-9-17
+1. Changed to relative time.
+2. going to try with multipule RF systems. 
+3. Need to try Mike's simutaneously rampping method which may increase the speed of the code. 
+
+2019-9-27
+1. 2-RF works. 
+2. changed to Mike's simutaneous rampping approach, and it worked.
+3. Rewrote the code in c, much faster.
+4. Need to re-implement the input machenism.
+5. Need to implement the HOM simulation function.
+2019-10-1
+1. The new code works faster then C++.
+2. Implemented the input mechenism.
+3. HOM is counted as another RF system which makes things easier to code.
+4. Need to change the data structure of particle coordinates so that the memory access is better aligned.
+
+2019-10-4
+1. 3rd order harmonic cavity works well under certain condition, bunch is lengthen to reduce the peak current to about 70%.
+2. need to explicitly align the date for further vectorization, namely use _mm_malloc and _mm_free and assume_aligned() function. 
+
+2019-10-8
+1. need to add the tuning function.
+
+2019-10-11
+1. Added the tuning functionality, works fine.
+2. Need to add the synchrotron radiation, radiation damping and quantum excitation terms to the electron bunches. done, works fine.
+
+2020-5-7
+1. Need to add the klystron resonator to mimic the bandwidth of the klystron. To do that, I'm thinking about add another vector to store the voltage and charactoristic parameters of the klystron resonator and 
+    a vector to store the voltage Vk, voltage integral Uk, drive to the klystron ILLRF, 
+    then we need to calculate the driving current to the cavity Ig based on the Vk. 
+    The IQ feedback will directly act on the ILLRF.
+    
+2020-7-27
+1. Working on the feature list of the new version of the code. 
+
+2020-8-20
+1. Updated the particle update function for the proton so that it flag the particle that is outside one turn time frame as "Lost". The update of Ib will not take these particles into account.
+2. Need to update the monemtum update function to exclude the lost particles.
