@@ -10,7 +10,7 @@
 #include <iterator>
 #include <map>
 #include <cstdlib>
-#include <aligned_new>
+//#include <aligned_new>
 #include <mkl.h>
 #include <mkl_vsl.h>
 //#include <mpi.h>
@@ -18,20 +18,9 @@
 #include <parallel/algorithm>
 #include <parallel/numeric>
 
-#include"inputPara.h"
+#include "const.h"
+#include "inputPara.h"
 
-const double c_light = 299792458;
-const double c_inver = 1/c_light;
-const double pi = M_PI;
-const double me = 9.1093837015e-31;
-const double mp = 1.67262192369e-27;
-const double mAu = 196.9665687*1.660540e-27;
-const double qe = 1.6021766208e-19;
-const double qAu = 79*qe;
-const double E0p = 938.2720813e6;
-const double E0e = 0.510998950e6;
-const double E0Au = 196.9665687*931.5e6;
-double E0 = E0p;
 
 double qovermp = qe/mp;
 double qoverme = qe/me;
@@ -478,18 +467,22 @@ void get_init_gamma0s(double* gamma0s,double* t0s,double dT, double t0, double T
 }
 // generate the random number table for the quantum excitation calculation each turn. 
 // this one is for gcc compiler, if intel compiler is not available 
-void get_rand_table0(double* rand_table, int nBunch, int nPar){
+void get_rand_table(double* rand_table, int nBunch, int nPar){
     for(int i = 0;i<nBunch*nPar;++i){
         rand_table[i] = double(rand())/double(RAND_MAX);
     }
 }
+
+#if 0
 // using the stream way to generate random numbers, faster than the one above. 
-void get_rand_table(double* rand_table, int nBunch, int nPar,int turn){
+void get_rand_table1(double* rand_table, int nBunch, int nPar,int turn){
     VSLStreamStatePtr stream;
     auto status = vslNewStream(&stream, VSL_BRNG_SFMT19937, turn);
     status = vdRngUniform(VSL_RNG_METHOD_UNIFORM_STD,
 		stream, nBunch*nPar, rand_table, 0, 1);
 }
+#endif 
+
 int main(){
     std::cout.precision(17);
     omp_set_num_threads(OMP_NUM_THREADS);
@@ -880,8 +873,8 @@ int main(){
         }
         
 
-        //get_rand_table(rand_table,nBunch,nPar);
-        get_rand_table(rand_table,nBunch,nPar,i);
+        get_rand_table(rand_table,nBunch,nPar);
+        //get_rand_table1(rand_table,nBunch,nPar,i);
         if(i>=n_dynamicOn){
             dynamicOn=1;
         }

@@ -1,2 +1,2 @@
-testmake: ./src/main_gcc.cpp
-	g++ ./src/main_gcc.cpp -o APESGCC -fopenmp -std=c++11 -O3 
+testmake: ./src/main.cpp
+	g++ ./src/main.cpp -o APESGCC -fopenmp -std=c++11 -O3 
