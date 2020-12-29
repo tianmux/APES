@@ -42,8 +42,8 @@ def get_VI(datafile,n_stride,nTurns,store_step,NpRF,h,nRF,nBeam,omegarf,V0,V0Q,I
 # Plot VI
 def plot_VI(startTurn,startRF,nRF,nRFsamp,NpRF,nBeam,h,V,Vref,Iref,Ig,Ibi,Ibi2,cwd):
     print(nRF)
-    rng1 = NpRF*(h[0]*startTurn+startRF)+int(3*NpRF/8)*0
-    rng2 = NpRF*(h[0]*startTurn+startRF+nRFsamp)-int(3*NpRF/8)*0
+    rng1 = NpRF*(h[0]*startTurn+startRF)
+    rng2 = NpRF*(h[0]*startTurn+startRF+nRFsamp)
     rng3 = 50
     step1 = 1
     step2 = 1

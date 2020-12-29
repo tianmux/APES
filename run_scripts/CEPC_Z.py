@@ -48,7 +48,7 @@ beam_shift = 94
 
 #----------------------------#
 #important inputs
-n_turns = 5000
+n_turns = 6000
 n_dynamicOn = 4000
 n_bunches = 13551
 n_fill = 1000 
@@ -61,11 +61,12 @@ n_I_ramp_end = 3000
 step_store = 1000 
 Prad = 16.5e6
 t_rad_long=  0.425 
-Ek_damp = 2
+Ek_damp = 2e11
+Ek_damp_always = 2e11
 Npar = 1440 
 NperBunch = 8e10*12000/13551
-N_bins = 65 
-fill_step = 16*10
+N_bins = 33 
+fill_step = 16
 siglong = 0.038e-2*Gamma #11.368 
 A = 1.0 
 
@@ -150,11 +151,11 @@ nParMin = iMin/f0/n_bunches/1.6e-19
 nParMax = iMax/f0/n_bunches/1.6e-19
 
 # setup the loading angle samples, for the focusing cavity only.
-N_thetaL = 1 
+N_thetaL = 10
 ThetaL_min = np.zeros(nRF)#17.5
 ThetaL_max = np.zeros(nRF)#17.5
 
-ThetaL_min[0] = 10
+ThetaL_min[0] = -10
 ThetaL_max[0] = 10
 
 dnPar = (nParMax-nParMin)/N_samples
@@ -325,6 +326,7 @@ for charge_factor in range(N_samples):
         tempinput['Prad'] = np.array([Prad])
         tempinput['t_rad_long'] = np.array([t_rad_long])
         tempinput['Ek_damp'] = np.array([Ek_damp])
+        tempinput['Ek_damp_always'] = np.array([Ek_damp])
         tempinput['Npar'] = np.array([Npar])
         tempinput['NperBunch'] = np.array([NperBunch])
         tempinput['N_bins'] = np.array([N_bins])
