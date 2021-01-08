@@ -15,7 +15,7 @@ clight = 299792458
 E0Au = 196.9665687*931.5e6
 E0Elec = 0.51099895000e6
 
-working_folder = 'CEPC/test_Z'
+working_folder = 'CEPC/test_Z_lowI'
 home = os.getcwd()
 print(home)
 cwd = os.path.join(home,working_folder)
@@ -69,6 +69,9 @@ N_bins = 33
 fill_step = 16
 siglong = 0.038e-2*Gamma #11.368 
 A = 1.0 
+n_ini_CBI = 1
+mu = np.array([0])
+CBI_ini_amp = np.array([1])
 
 nRF = 1 
 nRF1 = 1
@@ -77,7 +80,6 @@ nRF2 = 0
 nHOM = 0
 nCav = np.array([60])
 h = np.array([216816])
-#h = np.array([192000])
 
 RoQ = np.array([213/2])*nCav
 delay = np.array([0])
@@ -145,8 +147,8 @@ print("Qs = ",Qs)
 # setup the current samples
 
 N_samples = 1 
-iMin = 0.46
-iMax = 0.46
+iMin = 0.0046
+iMax = 0.0046
 nParMin = iMin/f0/n_bunches/1.6e-19
 nParMax = iMax/f0/n_bunches/1.6e-19
 
@@ -333,7 +335,10 @@ for charge_factor in range(N_samples):
         tempinput['fill_step'] = np.array([fill_step])
         tempinput['siglong'] = np.array([siglong])
         tempinput['A'] = np.array([A])
-        
+        tempinput['n_ini_CBI'] = np.array([n_ini_CBI])
+        tempinput['mu'] = np.array(mu)
+        tempinput['CBI_ini_amp'] = np.array(CBI_ini_amp)
+
         tempinput['nRF'] = np.array([nRF])
         tempinput['nRF1'] = np.array([nRF1])
         tempinput['nRFc'] = np.array([nRFc])

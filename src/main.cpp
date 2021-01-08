@@ -706,6 +706,10 @@ int main(){
     std::cout<<"Qs"<<Qs<<std::endl;
     // initial coupled bunch modes
     int n_ini_CBI = input1.rfPara["n_ini_CBI"][0];
+    std::cout<<n_ini_CBI<<std::endl;
+    std::cout<<input1.rfPara["mu"][0]<<std::endl;
+    std::cout<<input1.rfPara["CBI_ini_amp"][0]<<std::endl;
+
     std::vector<int> mode;
     std::vector<double> amp_gamma;
     std::vector<double> amp_time;
