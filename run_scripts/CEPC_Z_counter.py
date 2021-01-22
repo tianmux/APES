@@ -15,7 +15,7 @@ clight = 299792458
 E0Au = 196.9665687*931.5e6
 E0Elec = 0.51099895000e6
 
-working_folder = 'CEPC/Z_slow_turn_on'
+working_folder = 'CEPC/Z_counter'
 home = os.getcwd()
 print(home)
 cwd = os.path.join(home,working_folder)
@@ -65,7 +65,7 @@ Ek_damp = 2e11
 Ek_damp_always = 2e11
 Npar = 1440 
 NperBunch = 8e10*12000/13551
-N_bins = 129 
+N_bins = 13 
 fill_step = 16
 siglong = 0.038e-2*Gamma #11.368 
 A = 1.0 
@@ -73,43 +73,43 @@ n_ini_CBI = 1
 mu = np.array([0])
 CBI_ini_amp = np.array([0])
 
-nRF = 1 
-nRF1 = 1
+nRF = 2 
+nRF1 = 2
 nRFc = 0
 nRF2 = 0
 nHOM = 0
-nCav = np.array([60])
-h = np.array([216816])
+nCav = np.array([33,27])
+h = np.array([216816,216816])
 
-RoQ = np.array([213/2])*nCav
-delay = np.array([0])
-n_fb_on = np.array([50.0])
-gII = np.array([0.0])
-gQQ = np.array([0.0])
-gIQ = np.array([0.0])
-gQI = np.array([0.0])
-gIIi = np.array([0.0])
-gQQi = np.array([0.0])
-gIQi = np.array([0.0])
-gQIi = np.array([0.0])
-PA_cap = np.array([1.0])
+RoQ = np.array([213/2,213/2])*nCav
+delay = np.array([0,0])
+n_fb_on = np.array([50.0,50])
+gII = np.array([0.0,0])
+gQQ = np.array([0.0,0])
+gIQ = np.array([0.0,0])
+gQI = np.array([0.0,0])
+gIIi = np.array([0.0,0])
+gQQi = np.array([0.0,0])
+gIQi = np.array([0.0,0])
+gQIi = np.array([0.0,0])
+PA_cap = np.array([1.0,1])
 
 #----------------------------#
 # the following parameters need to be derived from the input parameters
 # here just show some place holder.
-QL = np.array([329321.8554911])
-Vref_I = np.array([0.1e9])
-Vref_Q = np.array([-2370878.834453])
-Iref_I = np.array([0.4869135928499])
-Iref_Q = np.array([-0.02191560337399])
-I_I_ref_ini = np.array([0.243456796425])
-I_I_ref_final = np.array([0.486913592849])
-I_Q_ref_ini = np.array([-0.0109578016869])
-I_Q_ref_final = np.array([-0.02191560337399])
-detune = np.array([0.0])
-detune_ini = np.array([0.0])
-detune_mid = np.array([-9970.53659004])
-detune_final = np.array([-19941.0731801])
+QL = np.array([329321.8554911,0])
+Vref_I = np.array([0.1e9,1])
+Vref_Q = np.array([-2370878.834453,1])
+Iref_I = np.array([0.4869135928499,1])
+Iref_Q = np.array([-0.02191560337399,1])
+I_I_ref_ini = np.array([0.243456796425,1])
+I_I_ref_final = np.array([0.486913592849,1])
+I_Q_ref_ini = np.array([-0.0109578016869,1])
+I_Q_ref_final = np.array([-0.02191560337399,1])
+detune = np.array([0.0,0])
+detune_ini = np.array([0.0,0])
+detune_mid = np.array([-9970.53659004,1])
+detune_final = np.array([-19941.0731801,1])
 
 
 
@@ -208,7 +208,7 @@ for charge_factor in range(N_samples):
         
         # this is the required real voltage on beam, to compensate radiation loss
         Vsynch_need = U_loss
-        # this is the required imaginary voltage, to provide bucket. 
+        # this is the required imaginary voltage, to provide bucket. per cavity
         Vquard_need = V0*np.sin(np.arccos(U_loss/V0))*h[0]/h[0] # calculating it from known parameters
         
         
@@ -221,8 +221,10 @@ for charge_factor in range(N_samples):
             Vq[0] = NC/(NF-ND)*Vquard_need
             #PhisPhasor = np.arctan(Vq[0]/Vs[0])
         if nRF == 2 :
-            Vnew = 5861889.40948 # per cavity
-            PhisPhasor = 87.4858055644/180*pi
+            Vnew = np.sqrt(Vsynch_need**2+(NC/(NF-ND)*Vquard_need)**2) #per cavity
+            PhisPhasor = np.arctan((NC/(NF-ND)*Vquard_need)/Vsynch_need)
+            #PhisPhasor = 87.4858055644/180*pi
+
             Vs[0] = Vnew*np.cos(PhisPhasor)
             Vq[0] = Vnew*np.sin(PhisPhasor)
             Vs[1] = (Urad0-Vs[0]*NF)/ND
@@ -230,8 +232,8 @@ for charge_factor in range(N_samples):
         if nRF == 1:
             Qs = np.sqrt(h[int(mainRF)]*atomicZ*np.abs(Vq[0]*NF)*eta/(2*np.pi*Ek))
         elif nRF != 1 :
-            Qs = np.sqrt(h[int(mainRF)]*atomicZ*np.abs(Vq[0]*NF-Vq[1]*ND)*eta/(2*np.pi*Ek))
-
+            Qs = np.sqrt(h[int(mainRF)]*atomicZ*np.abs(Vq[0]*NF+Vq[1]*ND)*eta/(2*np.pi*Ek))
+        print("NF,ND: ",NF,ND)
         print("Vs,Vq: ",Vs,Vq)
         print("Qs = ",Qs)
         PhisPhasor = np.arctan(Vq/Vs)

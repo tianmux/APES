@@ -20,10 +20,10 @@ def get_VI(datafile,n_stride,nTurns,store_step,NpRF,h,nRF,nBeam,omegarf,V0,V0Q,I
     test = array('d')
     with open(datafile, mode='rb') as file: # b is important -> binary
         test.fromfile(file,int((n_stride)*nTurns/store_step*NpRF*h[0]))
-    time = np.array(test[0::n_stride])
-    Ibi = np.array(test[1::n_stride])
+    time = np.array(test[0::n_stride],dtype='float32')
+    Ibi = np.array(test[1::n_stride],dtype='float32')
     #Ibi_1 = np.array(test[2::n_stride])
-    Ibi2 = np.array(test[3::n_stride])
+    Ibi2 = np.array(test[3::n_stride],dtype='float32')
 
     V = []
     Ig = []
@@ -31,8 +31,8 @@ def get_VI(datafile,n_stride,nTurns,store_step,NpRF,h,nRF,nBeam,omegarf,V0,V0Q,I
     Vref = []
     Iref = []
     for i in range(nRF):
-        V.append(np.array(test[1+2*nBeam+0+i*3::n_stride]))
-        Ig.append(np.array(test[1+2*nBeam+1+i*3::n_stride]))
+        V.append(np.array(test[1+2*nBeam+0+i*3::n_stride],dtype='float32'))
+        Ig.append(np.array(test[1+2*nBeam+1+i*3::n_stride],dtype='float32'))
 
         Vref.append(V0[i]*np.sin(omegarf[i]*time)+V0Q[i]*np.cos(omegarf[i]*time))
         Iref.append(II[i]*np.sin(omegarf[i]*time)+IQ[i]*np.cos(omegarf[i]*time))

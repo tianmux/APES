@@ -1,2 +1,2 @@
 tmake: ./src/main.cpp 
-	icpc ./src/main.cpp -o APESAVX2 -qopenmp -qopt-report5 -qopt-report-phase=openmp,vec  -std=c++14 -O3  -g -xCORE-AVX2 -I /opt/intel/advisor/include -liomp5 -lpthread -lm -ldl  -mkl=parallel 
+	icpx -qopenmp ./src/main.cpp -o APESAVX2 -qopt-report5 -qopt-report-phase=openmp,vec  -std=c++14 -O3  -g -xCORE-AVX2 -I /opt/intel/advisor/include -liomp5 -lpthread -lm -ldl  -mkl=parallel 
