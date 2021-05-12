@@ -1,0 +1,69 @@
+type 1.0 
+csv_out 0 
+dynamicOn 0 
+n_per_show 10 
+turn_start 0 
+mainRF 0 
+main_detune 0 
+detune_slow_factor 1.0 
+R 15915.494309189535 
+GMTSQ 67567.56756756756 
+Gamma 89041.27885194284 
+nBeam 1 
+beam_shift 94 
+n_turns 600 
+n_dynamicOn 400 
+n_bunches 13551 
+n_fill 100 
+n_q_ramp 200 
+n_detune_start 100 
+n_detune_ramp 300 
+n_detune_ramp_tot 300 
+n_I_ramp_start 100 
+n_I_ramp_end 300 
+step_store 100 
+Prad 16482757.04891692 
+t_rad_long 0.425 
+Ek_damp 200000000000.0 
+Ek_damp_always 200000000000.0 
+Npar 1440 
+NperBunch 70769446812.42464 
+N_bins 129 
+fill_step 16 
+siglong 33.835685963738285 
+A 1.0 
+n_ini_CBI 1 
+mu 0 
+CBI_ini_amp 0 
+nRF 2 
+nRF1 2 
+nRFc 0 
+nRF2 0 
+nHOM 0 
+nCav 33 27 
+h 216816 216816 
+I_Q_ref_ini -0.043372346148293585 0.04066588194561366 
+I_Q_ref_final -0.08674469229658716 0.08133176389122723 
+RoQ 3514.5 2875.5 
+delay 0 0 
+n_fb_on 50.0 50.0 
+gII 0.0 0.0 
+gQQ 0.0 0.0 
+gIQ 0.0 0.0 
+gQI 0.0 0.0 
+gIIi 0.0 0.0 
+gQQi 0.0 0.0 
+gIQi 0.0 0.0 
+gQIi 0.0 0.0 
+PA_cap 1.0 1.0 
+QL 4143800.857060435 4143800.8570604497 
+Vref_I 513479187.13795626 -420119334.9310551 
+Vref_Q -19707644.297618084 -16124436.243505614 
+Iref_I 0.06729100776161856 -0.07374188463516071 
+Iref_Q -0.08674469229658716 0.08133176389122723 
+I_I_ref_ini 0.03364550388080929 -0.036870942317580396 
+I_I_ref_final 0.06729100776161856 -0.07374188463516071 
+detune 0.0 0.0 
+detune_ini 93.46944415569305 93.46944415569305 
+detune_mid -975.006070792675 1068.478740632534 
+detune_final -1856.542697429657 2230.426925420761 

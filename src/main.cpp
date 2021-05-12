@@ -427,7 +427,7 @@ void detune_rampping(int turn, int n_detune_start, int n_detune_ramp,int nRF, do
     }
 }
 
-void get_init_t0s(double* t0s,double dT, double t0, double Trev, int nBeam, int nBunch, int shift,int nBucket,std::vector<int> &mode, std::vector<double> &amp,int n_ini_CBI = 0){
+void get_init_t0s_backup(double* t0s,double dT, double t0, double Trev, int nBeam, int nBunch, int shift,int nBucket,std::vector<int> &mode, std::vector<double> &amp,int n_ini_CBI = 0){
 // get the initial time coordinates of each bunches stored in array "t0s", dT is the bunch distance, t0 is the start t
 // nBeam is the number of beams, can be one or two
 // nBunch is the number of bunches in each beam
@@ -448,7 +448,41 @@ void get_init_t0s(double* t0s,double dT, double t0, double Trev, int nBeam, int 
         std::cout<<"Time of first bunch: "<<t0s[i*nBunch+0]<<std::endl;
     }
 }
+void get_init_t0s(double* t0s,double dT, double t0, double Trev, 
+                int nBeam, int nBunch, int shift,
+                int nBucket,std::vector<int> &mode, std::vector<double> &amp,int n_ini_CBI,
+                int nTrain,std::vector<int> &pattern){
+// get the initial time coordinates of each bunches stored in array "t0s", dT is the bunch distance, t0 is the start t
+// nBeam is the number of beams, can be one or two
+// nBunch is the number of bunches in each beam
+// shift is the relative shift between two bunches 
 
+// 'mode' is the mu number for coupled bunch mode initially excited
+// 'amp' is the amplitude of the coupled bunch mode, can excite only one mode now.
+
+// nTrain is the number of bunch trains.
+// pattern stores the information of bunch pattern, in the form of nBunch1, nGap1, nBunch2, nGap2, ..., in unit of RF bucket. 
+    for(int i = 0;i<nBeam;++i){
+        int bunch_index = 0;
+        int bucket_index = 0;
+        for(int j = 0;j<nTrain;++j){
+            for(int n = 0 ; n<pattern[j*2];++n){
+                //t0s[i*nBunch+j] = fmod(t0+(i*shift)%nBucket*t0*2+j*dT+i*t0/2,Trev);
+                //this is for one beam case only.
+                t0s[i*nBunch+bunch_index] = t0+bucket_index*dT;
+                // apply initial coupled bunch mode if any, might have some problem with non-uniform fill.
+                for(int k = 0;k<n_ini_CBI;++k){
+                    t0s[i*nBunch+bunch_index] += amp[k]*sin(mode[k]*2*pi*1/Trev*t0s[i*nBunch+bunch_index]);
+                }
+                bunch_index += 1;
+                bucket_index += 1;
+            }
+            bucket_index += pattern[j*2+1];
+        }
+        std::cout<<"Sanity check: nBunch consistent?"<<nBunch-bunch_index<<std::endl;
+        std::cout<<"Time of first bunch: "<<t0s[i*nBunch+0]<<std::endl;
+    }
+}
 void get_init_gamma0s(double* gamma0s,double* t0s,double dT, double t0, double Trev, double Gamma0, int nBeam, int nBunch, int shift,int nBucket,std::vector<int> &mode, std::vector<double> &amp,int n_ini_CBI = 0){
 // get the initial gamma coordinates of each bunches stored in array "gamma0s", dT is the bunch distance, t0 is the start t
 // nBeam is the number of beams, can be one or two
@@ -804,11 +838,10 @@ int main(){
 
     init_tempIQ(data1,sintable, costable, tempI, tempQ, I, Q, delay,nSmp,delay[0]+nSmp[0],nRF,stride);
 
-    get_init_t0s(t0s,fill_step*Trf,Trf/2,Trev,nBeam,nBunch,beam_shift,h[0],mode,amp_time,n_ini_CBI);
+    get_init_t0s(t0s,fill_step*Trf,Trf/2,Trev,nBeam,nBunch,beam_shift,h[0],mode,amp_time,n_ini_CBI,input1.PatternPara["nTrain"][0],input1.PatternPara["Pattern"]);
     get_init_gamma0s(gamma0s,t0s,fill_step*Trf,Trf/2,Trev,Gamma0, nBeam,nBunch,beam_shift,h[0],mode,amp_gamma,n_ini_CBI);
     srand(0);
     std::cout<<"Initializing bunches."<<std::endl;
-   
     for( int i = 0;i<nBunch*nBeam;++i){
         init_bunch(bunch,t0s[i],gamma0s[i],t_hat,delta_hat,nPar,nBunch,fill_count,nBeam);
         fill_count++;

@@ -40,7 +40,7 @@ mainRF = 0
 main_detune = 0
 detune_slow_factor = 1.0 
 R = 100e3/2/pi
-GMTSQ = 1/1.48e-5#90089.0664
+GMTSQ = 1/1.11e-5#90089.0664
 Gamma = 45.5e9/E0Elec; 
 print("Gamma0 = ",Gamma)
 nBeam = 1
@@ -160,13 +160,13 @@ nParMin = iMin/f0/n_bunches/1.6e-19
 nParMax = iMax/f0/n_bunches/1.6e-19
 
 # setup the loading angle samples, for the focusing cavity only.
-N_thetaL = 100
+N_thetaL = 30
 
 ThetaL_min = np.zeros(nRF)#17.5
 ThetaL_max = np.zeros(nRF)#17.5
 
-ThetaL_min[0] = -50
-ThetaL_max[0] = 50
+ThetaL_min[0] = -30
+ThetaL_max[0] = 30
 
 #ThetaL_min[1] = 10
 #ThetaL_max[1] = 10
@@ -212,7 +212,7 @@ for charge_factor in range(N_samples):
         # then calculate the inputs for the code, namely VrefI, VrefQ, IrefI, IrefQ.
         
         # for fundamental, 
-        Vtot = 0.1e9 # total voltage, just for calcualating the required voltages.
+        Vtot = 1.67e6*60 # total voltage, just for calcualating the required voltages.
         Urad0 = Prad/(n_bunches*nPar*1.6e-19*f0) # radiation caused Voltage total, depends on beam kinetic energy
         U_loss = Urad0/NC 
         print("Urad0 : ",Urad0)
@@ -412,11 +412,11 @@ for charge_factor in range(N_samples):
         args = ("../../runavx2x.sh")
         args = ("../../runavx2x.sh")
         print(cwd)
-        popen = subprocess.Popen(args, stdout=subprocess.PIPE,cwd=cwd)
+        #popen = subprocess.Popen(args, stdout=subprocess.PIPE,cwd=cwd)
         print("Simulation started...")
-        err = popen.wait()
-        output = popen.stdout.read()
-        print(output.decode("utf-8"))
+        #err = popen.wait()
+        #output = popen.stdout.read()
+        #print(output.decode("utf-8"))
 
         if nRF==1:
             path = os.path.join(cwd,"{0:02d}".format(charge_factor)+"{0:02d}".format(thetaL_factor)+"nmacro{0:.0f}".format(Npar)+"_nBin{0:.0f}".format(N_bins)+"_Idc{0:.2f}A".format(n_bunches*nPar*f0*1.6e-19)+"_ThetaL{0:.1f}degree".format(180/pi*thetaL[0]))

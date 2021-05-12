@@ -24,6 +24,9 @@ public:
     // bunch parameters
 
     std::map<std::string,double> bunchPara;
+
+    //beam pattern
+    std::map<std::string,std::vector<int>> PatternPara;
     
     inputPara(){
         c = 299792458;
@@ -81,9 +84,10 @@ public:
             {"Ek_damp_always",5.0},
             {"nHOM",0}
         };
+
         // RF parameters
         rfPara={
-            {"h",std::vector<double>(1)},
+            {"h",std::vector<double>(1)}, // the harmonic numbers of the RF, if there is only one then it essentially is the total number of buckets.
 			{"RoQ",std::vector<double>(0)},
             {"Qs",std::vector<double>(0)},// This is the synchrotron tune, sqrt(h[0]*V[0]*eta*abs(cos(phis[0]))/(2*M_PI*Ek));
 			{"QL",std::vector<double>(0)}, // this is the loaded Q of each mode. 
@@ -99,6 +103,7 @@ public:
             {"mu",std::vector<double>(1)}, // the mode index of initialized coupled bunch mode
             {"CBI_ini_amp",std::vector<double>(1)} // the amplitude of initial coupled bunch mode.
         };
+
         apPara={
 			
             {"delay",std::vector<double>(1)}, // delay of the feedback.
@@ -123,7 +128,8 @@ public:
     
         bunchPara={
             {"nBeam",1},
-            {"beam_shift",0},
+            {"beam_shift",0}, // this is the number of bucket between bunches in a train. 
+            {"gap",0},
             {"Npar",1e6},
 			{"NperBunch",2.7e9},
 			{"N_bins",1e3},
@@ -133,7 +139,17 @@ public:
             {"epsln",bunchPara["A"]/6},//bunchPara["A"]/6},
             {"delta_hat",0},//sqrt(epsln)*sqrt(ringPara["omg0"]/(M_PI*ringPara["Ek"]))*std::pow((rfPara["h"][0]*rfPara["V"][0]*abs(cos(rfPara["phis"][0]))/(2*M_PI*ringPara["Ek"]*ringPara["eta"])),0.25)},
             {"t_hat",0},//bunchPara["delta_hat"]/rfPara["Qs"]*ringPara["eta"]/ringPara["omg0"]
-            
+        };
+
+        // need to specify the beam patter, 
+            // current idea is to specify number of train first, then specify the number of bunches and the gap between each train explicitly.
+            // for example, 
+            // "nTrain"=2;
+            // "Pattern" = [1000,200,1000,200] 
+            // means we have 2 trains, each has 1000 bunches in there and the gap between trains is 200 empty bucket.
+        PatternPara={
+            {"nTrain",std::vector<int>(1)},
+            {"Patter",std::vector<int>(2)},
         };
     };
 	bool inRFPara(std::vector<std::string> V,std::vector<std::string> T, std::vector<std::string> TP,std::vector<std::string> Phi,std::string para){
@@ -208,6 +224,11 @@ public:
                         apPara["gIQi"].resize(nRF);
                         apPara["gQIi"].resize(nRF);
                     }
+                    if(vstrings[0]=="nTrain"){
+                        PatternPara["nTrain"][0]=stoi(vstrings[1]);
+                        PatternPara["Pattern"].resize(stoi(vstrings[1])*2);
+                    }
+
                     //std::cout<<vstrings[0]<<std::endl;
 					if(inRFPara(rfVLines,rfTLines,rfTPLines,rfPhiLines,vstrings[0])){
 						rfPara[vstrings[0]].resize(vstrings.size()-1);
@@ -251,7 +272,16 @@ public:
                             apPara[vstrings[0]][i]=stod(vstrings[i+1]);
                         }
                     }
-
+                    if(vstrings[0]=="nTrain"){
+                        for(unsigned int i=0;i<PatternPara[vstrings[0]].size();++i){                      
+                            PatternPara[vstrings[0]][i]=stod(vstrings[i+1]);
+                        }
+                    }
+                    if(vstrings[0]=="Pattern"){
+                        for(unsigned int i=0;i<PatternPara[vstrings[0]].size();++i){
+                            PatternPara[vstrings[0]][i]=stod(vstrings[i+1]);
+                        }
+                    }
                 }
             }
         }
@@ -312,6 +342,14 @@ public:
         std::cout<<"Bunch Parameters:"<<std::endl;
         for(auto& x:bunchPara){
             std::cout<<x.first<<"="<<x.second<<std::endl;
+        }
+        std::cout<<"Pattern Parameters:"<<std::endl;
+        for(auto& x:rfPara){
+            std::cout<<x.first;
+            for(auto&data:x.second){
+                std::cout<<":"<<data;
+            }
+            std::cout<<std::endl;
         }
         return 0;
     };
